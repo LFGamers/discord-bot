@@ -34,7 +34,7 @@ class KarmaCommand extends AbstractCommand {
 
 You can also type, \`karma top [amount]\` to see the top karma users, and \`karma bottom [amount]\` to see the bottom.
 
-If you are an admin, you can run \`karma clear\` to clear the karma.`
+If you are the server owner, you can run \`karma clear\` to clear the karma.`
     }
 
     handle() {
@@ -50,7 +50,7 @@ If you are an admin, you can run \`karma clear\` to clear the karma.`
 
         if (this.client.admin !== undefined) {
             this.responds(/^karma clear$/, () => {
-                if (this.client.admin.id !== this.message.author.id) {
+                if (this.message.server.owner.id !== this.message.author.id) {
                     return false;
                 }
 
@@ -87,6 +87,11 @@ If you are an admin, you can run \`karma clear\` to clear the karma.`
         });
 
         this.hears(/^<@(\d+)>[\s+]?(\+\+|\-\-)$/g, (matches) => {
+            let throttleKey = this.message.author.id + ":" + this.message.mentions[0].id;
+            if (this.isThrottled('karma:'+throttleKey, 5)) {
+                return false;
+            }
+
             let selfKarma = false;
             if (this.message.author.id === this.message.mentions[0].id) {
                 this.reply("You can't karma yourself. You get negative karma.");

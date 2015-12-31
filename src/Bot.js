@@ -1,17 +1,9 @@
-const MessageListener = require('./Listener/MessageListener');
-
-const Promise = require("bluebird");
-const Redis   = require('redis');
-const Client  = require('discord.js').Client;
-const chalk   = require('chalk');
-
-Promise.promisifyAll(Redis.RedisClient.prototype);
-Promise.promisifyAll(Redis.Multi.prototype);
+const chalk            = require('chalk');
+const ContainerBuilder = require('crate-js').ContainerBuilder;
 
 class Bot {
-    constructor(dev, adminId) {
-        this.dev     = dev;
-        this.adminId = adminId;
+    constructor() {
+        this.container = ContainerBuilder.buildFromJson(require('./container')(this));
 
         console.log(
             chalk.blue(
@@ -22,29 +14,27 @@ class Bot {
                 `
             )
         );
+
+        this.run();
     }
 
-    run(email, password) {
-        this.client          = new Client();
-        this.brain           = this.createBrain();
-        this.messageListener = new MessageListener(this.dev, this.brain, this.client);
+    run() {
+        this.container.get('listener.message').listen();
+        this.client = this.container.get('client');
 
-        this.client.login(email, password).catch(console.error);
-
-        if (this.dev) {
-            this.client.on('debug', (message) => console.log(chalk.cyan.dim(message)));
-        }
-
+        this.client.login(this.container.getParameter('login.email'), this.container.getParameter('login.password'));
         this.client.on('ready', this.onReady.bind(this));
         this.client.on('error', console.error);
-
         this.client.on('disconnect', this.onDisconnect.bind(this));
+        if (this.container.getParameter('dev')) {
+            this.client.on('debug', (message) => console.log(chalk.cyan.dim(message)));
+        }
     }
 
     onReady() {
         console.log(chalk.green("Bot is connected, waiting for messages"));
-        if (this.adminId !== undefined) {
-            this.client.admin = this.client.users.get('id', this.adminId);
+        if (this.container.getParameter('adminId') !== undefined) {
+            this.client.admin = this.client.users.get('id', this.container.getParameter('adminId'));
             this.client.sendMessage(this.client.admin, "Bot is connected, waiting for messages");
         } else {
             console.error(chalk.red("Admin ID not defined. Commands requiring it disabled."));
@@ -53,16 +43,6 @@ class Bot {
 
     onDisconnect() {
         console.log("Bot has disconnected");
-    }
-
-    createBrain() {
-        let client = Redis.createClient(process.env.DISCORD_REDIS_URL);
-
-        client.on("error", function(err) {
-            console.log("Error " + err);
-        });
-
-        return client;
     }
 }
 

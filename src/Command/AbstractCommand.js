@@ -1,5 +1,5 @@
 const prettyjson = require('prettyjson');
-const chalk = require('chalk');
+const chalk      = require('chalk');
 
 class AbstractCommand {
     static get name() { throw Error("Commands must override get name()"); }
@@ -8,10 +8,15 @@ class AbstractCommand {
 
     static get help() { return "None"; }
 
-    constructor(client, brain, message) {
-        this.client  = client;
-        this.brain   = brain;
-        this.message = message;
+    constructor(client, brain, throttleHelper, message) {
+        this.client   = client;
+        this.brain    = brain;
+        this.throttle = throttleHelper;
+        this.message  = message;
+    }
+
+    isThrottled(key, length) {
+        return this.throttle.isThrottled(key, this.message, length);
     }
 
     reply(content, delay) {

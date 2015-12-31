@@ -1,8 +1,12 @@
 const Message = require('../Model/Message');
 
 class MessageManager {
-    static create(client, message) {
-        return new Message(client, message);
+    constructor(client) {
+        this.client = client;
+    }
+
+    create(message) {
+        return new Message(this.client, message);
     }
 }
 
