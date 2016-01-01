@@ -8,11 +8,12 @@ class AbstractCommand {
 
     static get help() { return "None"; }
 
-    constructor(client, brain, throttleHelper, message) {
-        this.client   = client;
-        this.brain    = brain;
-        this.throttle = throttleHelper;
-        this.message  = message;
+    constructor(dispatcher, client, brain, throttleHelper, message) {
+        this.dispatcher = dispatcher;
+        this.client     = client;
+        this.brain      = brain;
+        this.throttle   = throttleHelper;
+        this.message    = message;
     }
 
     isThrottled(key, length) {

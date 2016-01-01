@@ -3,12 +3,13 @@ const walk           = require('walk');
 const chalk          = require('chalk');
 
 class MessageListener {
-    constructor(dev, brain, client, manager, throttleHelper) {
-        this.dev      = dev;
-        this.brain    = brain;
-        this.client   = client;
-        this.manager  = manager;
-        this.throttle = throttleHelper;
+    constructor(dev, dispatcher, brain, client, manager, throttleHelper) {
+        this.dev        = dev;
+        this.dispatcher = dispatcher;
+        this.brain      = brain;
+        this.client     = client;
+        this.manager    = manager;
+        this.throttle   = throttleHelper;
 
         this.commands = [];
     }
@@ -49,7 +50,7 @@ class MessageListener {
             }
 
             let cls     = this.commands[index],
-                command = new cls(this.client, this.brain, this.throttle, message);
+                command = new cls(this.dispatcher, this.client, this.brain, this.throttle, message);
 
             if (typeof command.setCommands === 'function') {
                 command.setCommands(this.commands);
