@@ -19,7 +19,6 @@ class Bot {
     }
 
     run() {
-        this.container.get('listener.message').listen();
         this.client = this.container.get('client');
 
         this.client.login(this.container.getParameter('login.email'), this.container.getParameter('login.password'));
@@ -33,6 +32,10 @@ class Bot {
 
     onReady() {
         console.log(chalk.green("Bot is connected, waiting for messages"));
+
+        this.container.get('listener.message').listen();
+        this.container.get('listener.username').listen();
+
         if (this.container.getParameter('adminId') !== undefined) {
             this.client.admin = this.client.users.get('id', this.container.getParameter('adminId'));
             this.client.sendMessage(this.client.admin, "Bot is connected, waiting for messages");

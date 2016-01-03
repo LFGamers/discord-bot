@@ -51,7 +51,9 @@ class AbstractCommand {
         let result = callback(matches);
 
         if (result !== false) {
-            console.log("\n" + prettyjson.render({"Command Executed": this.message.toArray()}) + "\n");
+            let array = this.message.toArray();
+            array.regex = regex.toString();
+            console.log("\n" + prettyjson.render({"Command Executed": array}) + "\n");
         }
     }
 

@@ -38,18 +38,18 @@ If you are the server owner, you can run \`karma clear\` to clear the karma.`
     }
 
     handle() {
-        if (this.message.isPm) {
-            this.reply('This has to be ran in a server');
-
-            return;
-        }
-
         this.responds(/^karma$/, () => {
             this.reply(KarmaCommand.help);
         });
 
         if (this.client.admin !== undefined) {
             this.responds(/^karma clear$/, () => {
+                if (this.message.isPm) {
+                    this.reply('This has to be ran in a server');
+
+                    return;
+                }
+
                 if (this.message.server.owner.id !== this.message.author.id) {
                     return false;
                 }
@@ -60,6 +60,12 @@ If you are the server owner, you can run \`karma clear\` to clear the karma.`
         }
 
         this.responds(/^karma (top|best|bottom|worst)[\s]?(\d+)?$/, (matches) => {
+            if (this.message.isPm) {
+                this.reply('This has to be ran in a server');
+
+                return;
+            }
+
             this.brain.get('discord.karma.'+this.message.server.id, (err, reply) => {
                 let karma = reply === null ? {} : JSON.parse(reply),
                     amount = matches[2] === undefined ? 5 : matches[2];
@@ -87,6 +93,12 @@ If you are the server owner, you can run \`karma clear\` to clear the karma.`
         });
 
         this.hears(/^<@(\d+)>[\s+]?(\+\+|\-\-)$/g, (matches) => {
+            if (this.message.isPm) {
+                this.reply('This has to be ran in a server');
+
+                return;
+            }
+
             let throttleKey = this.message.author.id + ":" + this.message.mentions[0].id;
             if (this.isThrottled('karma:'+throttleKey, 5)) {
                 return false;

@@ -46,6 +46,10 @@ class Message {
         this.message = message;
     }
 
+    isPm() {
+        return this.pm;
+    }
+
     toArray() {
         return {
             time:       this.time,

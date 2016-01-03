@@ -1,11 +1,12 @@
 const EventEmitter = require('events');
 const Client       = require('discord.js').Client;
 
-const RedisBrain      = require('./Brain/RedisBrain');
-const MessageListener = require('./Listener/MessageListener');
-const ThrottleHelper  = require('./Helper/ThrottleHelper');
-const MessageManager  = require('./Manager/MessageManager');
-const ReminderManager = require('./Manager/ReminderManager');
+const RedisBrain       = require('./Brain/RedisBrain');
+const MessageListener  = require('./Listener/MessageListener');
+const UsernameListener = require('./Listener/UsernameListener');
+const ThrottleHelper   = require('./Helper/ThrottleHelper');
+const MessageManager   = require('./Manager/MessageManager');
+const ReminderManager  = require('./Manager/ReminderManager');
 
 module.exports = (Bot) => {
     return {
@@ -19,20 +20,27 @@ module.exports = (Bot) => {
             redisUrl: process.env.DISCORD_REDIS_URL
         },
         services:   {
-            dispatcher:         {module: EventEmitter},
-            client:             {module: Client},
-            'brain.redis':      {module: RedisBrain, args: ['%redisUrl%']},
-            'manager.message':  {module: MessageManager, args: [{$ref: 'client'}]},
-            'helper.throttle':  {module: ThrottleHelper},
-            'reminder.message': {
+            dispatcher:          {module: EventEmitter},
+            client:              {module: Client},
+            'brain.redis':       {module: RedisBrain, args: ['%redisUrl%']},
+            'manager.message':   {module: MessageManager, args: [{$ref: 'client'}]},
+            'helper.throttle':   {module: ThrottleHelper},
+            'reminder.message':  {
                 module: ReminderManager,
-                args: [
+                args:   [
                     {$ref: 'dispatcher'},
                     {$ref: 'client'},
                     {$ref: 'brain.redis'}
                 ]
             },
-            'listener.message': {
+            'listener.username': {
+                module: UsernameListener,
+                args:   [
+                    {$ref: 'client'},
+                    {$ref: 'brain.redis'},
+                ]
+            },
+            'listener.message':  {
                 module: MessageListener,
                 args:   [
                     '%dev%',
