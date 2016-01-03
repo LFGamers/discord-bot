@@ -44,7 +44,7 @@ If you are the server owner, you can run \`karma clear\` to clear the karma.`
 
         if (this.client.admin !== undefined) {
             this.responds(/^karma clear$/, () => {
-                if (this.message.isPm) {
+                if (this.message.pm) {
                     this.reply('This has to be ran in a server');
 
                     return;
@@ -60,7 +60,7 @@ If you are the server owner, you can run \`karma clear\` to clear the karma.`
         }
 
         this.responds(/^karma (top|best|bottom|worst)[\s]?(\d+)?$/, (matches) => {
-            if (this.message.isPm) {
+            if (this.message.pm) {
                 this.reply('This has to be ran in a server');
 
                 return;
@@ -93,7 +93,7 @@ If you are the server owner, you can run \`karma clear\` to clear the karma.`
         });
 
         this.hears(/^<@(\d+)>[\s+]?(\+\+|\-\-)$/g, (matches) => {
-            if (this.message.isPm) {
+            if (this.message.pm) {
                 this.reply('This has to be ran in a server');
 
                 return;
