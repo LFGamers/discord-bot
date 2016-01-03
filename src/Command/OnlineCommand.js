@@ -35,6 +35,14 @@ class OnlineCommand extends AbstractCommand {
                     this.reply("The last time I saw that user online was: " + info.lastOnline);
 
                     return;
+                } else if (user.status === 'idle') {
+                    if (info.lastAvailable === undefined) {
+                        this.reply("I couldn't find status information on that user!");
+
+                        return;
+                    }
+
+                    this.reply("The last time I saw that user available was: " + info.lastAvailable);
                 }
 
                 this.reply("That user is currently online.");

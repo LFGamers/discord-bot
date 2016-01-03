@@ -37,9 +37,14 @@ class UserListener {
 
             user.status = status;
             if (status === 'offline') {
-                user.lastOnline = moment().format('dddd, MMMM Do YYYY, h:mm:ss a');
+                user.lastOnline    = moment().format('dddd, MMMM Do YYYY, h:mm:ss a');
+                user.lastAvailable = moment().format('dddd, MMMM Do YYYY, h:mm:ss a');
+            } else if (status === 'idle') {
+                user.lastAvailable = moment().format('dddd, MMMM Do YYYY, h:mm:ss a');
+                user.lastOnline    = undefined;
             } else {
-                user.lastOnline = undefined;
+                user.lastOnline    = undefined;
+                user.lastAvailable = undefined;
             }
 
             if (user.games === undefined) {
