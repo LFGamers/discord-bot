@@ -13,19 +13,21 @@ class NamesCommand extends AbstractCommand {
         });
 
         this.responds(/^names <@(\d+)>$/g, (matches) => {
-            let key = 'discord.username.' + matches[1];
+            let key = 'discord.user.' + matches[1];
             this.brain.get(key, (error, reply) => {
-                let usernames = reply === null ? [] : JSON.parse(reply),
-                    user      = this.message.mentions[0];
+                let user = reply === null ? {} : JSON.parse(reply);
 
-                if (usernames.length === 1) {
-                    this.sendMessage(this.message.channel, `${user.mention()} has no other usernames`);
+                if (user.usernames === undefined || user.usernames.length <= 1) {
+                    this.sendMessage(
+                        this.message.channel,
+                        `${this.message.mentions[0].mention()} has no other usernames`
+                    );
 
                     return;
                 }
 
-                let message = `${user.mention()} has used the following usernames: \n`;
-                usernames.forEach((username) => {
+                let message = `${this.message.mentions[0].mention()} has used the following usernames: \n`;
+                user.usernames.forEach((username) => {
                     username = username.replace('`', '\\`');
                     username = username.replace('@', '\\@');
                     message += `\n - ${username}`;

@@ -3,7 +3,7 @@ const Client       = require('discord.js').Client;
 
 const RedisBrain       = require('./Brain/RedisBrain');
 const MessageListener  = require('./Listener/MessageListener');
-const UsernameListener = require('./Listener/UsernameListener');
+const UserListener = require('./Listener/UserListener');
 const ThrottleHelper   = require('./Helper/ThrottleHelper');
 const MessageManager   = require('./Manager/MessageManager');
 const ReminderManager  = require('./Manager/ReminderManager');
@@ -34,10 +34,10 @@ module.exports = (Bot) => {
                 ]
             },
             'listener.username': {
-                module: UsernameListener,
+                module: UserListener,
                 args:   [
                     {$ref: 'client'},
-                    {$ref: 'brain.redis'},
+                    {$ref: 'brain.redis'}
                 ]
             },
             'listener.message':  {
