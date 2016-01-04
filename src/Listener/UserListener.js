@@ -12,7 +12,10 @@ class UserListener {
         this.client.on('userUpdated', this.onUserUpdate.bind(this));
         this.client.on('presence', this.onUserPresence.bind(this));
 
-        this.client.users.forEach((user) => { this.onUserUpdate(user, user); });
+        this.client.users.forEach((user) => {
+            this.onUserUpdate(user, user);
+            this.onUserPresence(user, user.status, user.gameID);
+        });
     }
 
     onUserUpdate(original, changed) {
@@ -47,12 +50,14 @@ class UserListener {
                 user.games = [];
             }
 
-            user.games.push(
-                {
-                    game: game,
-                    date: moment().format('dddd, MMMM Do YYYY, h:mm:ss a')
-                }
-            );
+            if (game !== null && game !== undefined) {
+                user.games.push(
+                    {
+                        game: String(game),
+                        date: moment().format('dddd, MMMM Do YYYY, h:mm:ss a')
+                    }
+                );
+            }
 
             user.save();
         });
