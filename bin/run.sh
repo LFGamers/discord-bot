@@ -1,6 +1,3 @@
 #!/usr/bin/env bash
 
-while :
-do
-    node --harmony index.js
-done
+node --harmony index.js
