@@ -24,7 +24,7 @@ class Message {
 
     get rawContent() { return this.message.content; }
 
-    get pm() { return this.message.channel === undefined; }
+    get pm() { return this.message.channel.server === undefined; }
 
     get mentions() {
         let users = [];

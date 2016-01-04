@@ -1,4 +1,5 @@
 const AbstractCommand = require('./AbstractCommand');
+const User            = require('../Model/User');
 
 class NamesCommand extends AbstractCommand {
     static get name() { return 'names'; }
@@ -13,11 +14,8 @@ class NamesCommand extends AbstractCommand {
         });
 
         this.responds(/^names <@(\d+)>$/g, (matches) => {
-            let key = 'discord.user.' + matches[1];
-            this.brain.get(key, (error, reply) => {
-                let user = reply === null ? {} : JSON.parse(reply);
-
-                if (user.usernames === undefined || user.usernames.length <= 1) {
+            User.findOne({identifier: matches[1]}, (err, user) => {
+                if (user.names === undefined || user.names.length <= 1) {
                     this.sendMessage(
                         this.message.channel,
                         `${this.message.mentions[0].mention()} has no other usernames`
@@ -27,7 +25,7 @@ class NamesCommand extends AbstractCommand {
                 }
 
                 let message = `${this.message.mentions[0].mention()} has used the following usernames: \n`;
-                user.usernames.forEach((username) => {
+                user.names.forEach((username) => {
                     username = username.replace('`', '\\`');
                     username = username.replace('@', '\\@');
                     message += `\n - ${username}`;

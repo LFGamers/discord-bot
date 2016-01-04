@@ -1,10 +1,11 @@
 const _      = require('lodash');
 const moment = require('moment');
 
+const User = require('../Model/User');
+
 class UserListener {
-    constructor(client, brain) {
+    constructor(client) {
         this.client = client;
-        this.brain  = brain;
     }
 
     listen() {
@@ -15,25 +16,20 @@ class UserListener {
     }
 
     onUserUpdate(original, changed) {
-        let key = 'discord.user.' + original.id;
-        this.brain.get(key, (error, reply) => {
-            let user = reply === null ? {} : JSON.parse(reply);
-
-            if (user.usernames === undefined) {
-                user.usernames = [];
+        User.findOne({identifier: original.id}, (err, user) => {
+            if (user === null) {
+                user = new User({identifier: original.id});
             }
 
-            user.usernames.push(changed.username);
-            user.usernames = _.unique(user.usernames);
+            user.names.push(changed.username);
+            user.names = _.unique(user.names);
 
-            this.brain.set(key, JSON.stringify(user));
-        })
+            user.save();
+        });
     }
 
     onUserPresence(user, status, game) {
-        let key = 'discord.user.' + user.id;
-        this.brain.get(key, (error, reply) => {
-            let user = reply === null ? {} : JSON.parse(reply);
+        User.findOne({identifier: user.id}, (err, user) => {
 
             user.status = status;
             if (status === 'offline') {
@@ -58,7 +54,7 @@ class UserListener {
                 }
             );
 
-            this.brain.set(key, JSON.stringify(user));
+            user.save();
         });
     }
 }

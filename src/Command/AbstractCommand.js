@@ -40,7 +40,7 @@ class AbstractCommand {
         throw Error("Commands must override handleMessage");
     }
 
-    getMatches(content, regex, callback) {
+    getMatches(content, regex, callback, noPrint) {
         let matches = regex.exec(content);
 
         //console.log(chalk.grey("Matching content against " + regex.toString(), content, matches));
@@ -50,19 +50,27 @@ class AbstractCommand {
 
         let result = callback(matches);
 
-        if (result !== false) {
+        if (!noPrint && result !== false) {
             let array = this.message.toArray();
             array.regex = regex.toString();
             console.log("\n" + prettyjson.render({"Command Executed": array}) + "\n");
         }
     }
 
-    hears(regex, callback) {
-        return this.getMatches(this.message.rawContent, regex, callback);
+    hears(regex, callback, noPrint) {
+        if (noPrint === undefined) {
+            noPrint = false;
+        }
+
+        return this.getMatches(this.message.rawContent, regex, callback, noPrint);
     }
 
-    responds(regex, callback) {
-        return this.getMatches(this.message.content, regex, callback)
+    responds(regex, callback, noPrint) {
+        if (noPrint === undefined) {
+            noPrint = false;
+        }
+
+        return this.getMatches(this.message.content, regex, callback, noPrint)
     }
 }
 

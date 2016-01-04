@@ -11,7 +11,7 @@ class RestartCommand extends AbstractCommand {
             return false;
         }
 
-        this.responds(/^(restart)$/g, () => {
+        this.responds(/^(restart)$/gi, () => {
             if (this.client.admin.id !== this.message.author.id) {
                 return false;
             }
