@@ -19,8 +19,8 @@ class RemindCommand extends AbstractCommand {
             this.reply(RemindCommand.help);
         });
         this.responds(/^remind(?: me)? (in|on|to) (.+?) (in|on|to) (.+?)$/m, (matches) => {
+            console.log(matches);
             try {
-
                 let type, date, action;
                 if (matches[1] === 'in') {
                     date   = moment().add(moment.duration(juration.parse(matches[2]), 'seconds'));
@@ -36,15 +36,15 @@ class RemindCommand extends AbstractCommand {
                         date = moment(matches[4]);
                     }
                 }
+
+                this.reply("Alright, I'll remind you.");
+
+                this.dispatcher.emit('new_reminder', {action: action, date: date.unix(), user: this.message.author.id});
             } catch (e) {
                 this.reply("Sorry, I couldn't understand your reminder");
 
                 return false;
             }
-
-
-            this.reply("Alright, I'll remind you.");
-            this.dispatcher.emit('new_reminder', {action: action, date: date.unix(), user: this.message.author.id});
         });
     }
 }
