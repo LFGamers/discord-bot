@@ -149,3 +149,5 @@ If you are the server owner, you can run \`karma clear\` to clear the karma.`
         return -1;
     }
 }
+
+module.exports = KarmaCommand;
