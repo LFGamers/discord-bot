@@ -24,14 +24,14 @@ class RemindCommand extends AbstractCommand {
                 let type, date, action;
                 if (matches[1] === 'in') {
                     date   = moment().add(moment.duration(juration.parse(matches[2]), 'seconds'));
-                    action = matches[4];
+                    action = matches[3];
                 } else if (matches[1] === 'on') {
                     date   = moment(matches[2]);
-                    action = matches[4];
+                    action = matches[3];
                 } else {
                     action = matches[1];
                     if (matches[3] === 'in') {
-                        date = moment().add(moment.duration(juration.parse(matches[4]), 'seconds'));
+                        date = moment().add(moment.duration(juration.parse(matches[3]), 'seconds'));
                     } else {
                         date = moment(matches[4]);
                     }
