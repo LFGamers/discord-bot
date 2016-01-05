@@ -24,6 +24,10 @@ class UserListener {
                 user = new User({identifier: original.id});
             }
 
+            if (user.names === undefined) {
+                user.names = [];
+            }
+
             user.names.push(changed.username);
             user.names = _.unique(user.names);
 
@@ -32,6 +36,8 @@ class UserListener {
     }
 
     onUserPresence(user, status, game) {
+        if (user.username === 'Sarahsota') console.log(user.game);
+
         User.findOne({identifier: user.id}, (err, user) => {
 
             user.status = status;
