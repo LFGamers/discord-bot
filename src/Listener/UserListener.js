@@ -36,11 +36,11 @@ class UserListener {
     }
 
     onUserPresence(user, status, game) {
-        if (user.username === 'Sarahsota') console.log(user.game);
+        let id = user.id
 
-        User.findOne({identifier: user.id}, (err, user) => {
+        User.findOne({identifier: id}, (err, user) => {
             if (user === null || user === undefined) {
-                user = new User({identifier: original.id});
+                user = new User({identifier: id});
             }
 
             user.status = status;
