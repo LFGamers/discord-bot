@@ -39,6 +39,9 @@ class UserListener {
         if (user.username === 'Sarahsota') console.log(user.game);
 
         User.findOne({identifier: user.id}, (err, user) => {
+            if (user === null || user === undefined) {
+                user = new User({identifier: original.id});
+            }
 
             user.status = status;
             if (status === 'offline') {
