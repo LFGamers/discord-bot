@@ -20,7 +20,7 @@ class UserListener {
 
     onUserUpdate(original, changed) {
         User.findOne({identifier: original.id}, (err, user) => {
-            if (user === null) {
+            if (user === null || user === undefined) {
                 user = new User({identifier: original.id});
             }
 
