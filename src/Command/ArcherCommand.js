@@ -1,6 +1,6 @@
 const AbstractCommand = require('./AbstractCommand');
 
-const THROTTLE = 60 * 5;
+const THROTTLE = 60 * 30;
 
 class ArcherCommand extends AbstractCommand {
     static get name() { return 'archer'; }
