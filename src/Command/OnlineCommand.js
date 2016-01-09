@@ -14,9 +14,7 @@ class OnlineCommand extends AbstractCommand {
         });
 
         this.responds(/^online <@(\d+)>$/g, (matches) => {
-            let user = this.client.users.get('id', matches[1]),
-                key  = 'discord.user.' + matches[1];
-
+            let user = this.client.users.get('id', matches[1]);
             User.findOne({identifier: matches[1]}, (err, info) => {
                 if (user === undefined) {
                     this.reply("I couldn't find status information on that user!");
