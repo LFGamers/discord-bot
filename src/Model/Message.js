@@ -12,7 +12,7 @@ class Message {
 
     get author() { return this.message.author; }
 
-    get botMention() { return this.content.indexOf(this.prefix) === 0 || this.message.isMentioned(this.client.user) || this.pm; }
+    get botMention() { return this.rawContent.indexOf(this.prefix) === 0 || this.message.isMentioned(this.client.user) || this.pm; }
 
     get content() {
         let content = this.rawContent;
