@@ -1,5 +1,5 @@
 const _      = require('lodash');
-const moment = require('moment');
+const moment = require('moment-timezone');
 
 const User = require('../Model/User');
 
