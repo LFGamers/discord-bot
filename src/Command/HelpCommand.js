@@ -13,6 +13,10 @@ class HelpCommand extends AbstractCommand {
 
     handle() {
         this.responds(/^(help)?$/g, () => {
+            if (this.message.message.attachments.length !== 0) {
+                return;
+            }
+
             let commands = this.commands.map((command) => {
                 return `\t${command.name} - ${command.description}`;
             });
