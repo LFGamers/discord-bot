@@ -45,10 +45,10 @@ class UserListener {
 
             user.status = status;
             if (status === 'offline') {
-                user.lastOnline    = moment().format('dddd, MMMM Do YYYY, h:mm:ss a');
-                user.lastAvailable = moment().format('dddd, MMMM Do YYYY, h:mm:ss a');
+                user.lastOnline    = moment().tz("America/Los_Angeles").format('dddd, MMMM Do YYYY, h:mm:ss a') + ' PST';
+                user.lastAvailable = moment().tz("America/Los_Angeles").format('dddd, MMMM Do YYYY, h:mm:ss a') + ' PST';
             } else if (status === 'idle') {
-                user.lastAvailable = moment().format('dddd, MMMM Do YYYY, h:mm:ss a');
+                user.lastAvailable = moment().tz("America/Los_Angeles").format('dddd, MMMM Do YYYY, h:mm:ss a') + ' PST';
                 user.lastOnline    = undefined;
             } else {
                 user.lastOnline    = undefined;
@@ -63,7 +63,7 @@ class UserListener {
                 user.games.push(
                     {
                         game: String(game),
-                        date: moment().format('dddd, MMMM Do YYYY, h:mm:ss a')
+                        date: moment().tz("America/Los_Angeles").format('dddd, MMMM Do YYYY, h:mm:ss a') + ' PST'
                     }
                 );
             }

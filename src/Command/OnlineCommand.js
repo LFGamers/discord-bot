@@ -1,5 +1,5 @@
 const AbstractCommand = require('./AbstractCommand');
-const User = require('../Model/User')
+const User = require('../Model/User');
 
 class OnlineCommand extends AbstractCommand {
     static get name() { return 'online'; }
