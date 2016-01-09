@@ -66,7 +66,7 @@ class AbstractCommand {
     }
 
     responds(regex, callback, noPrint) {
-        if (this.message.rawContent.indexOf(this.message.prefix) !== 0) {
+        if (!this.message.botMention) {
             return;
         }
 
