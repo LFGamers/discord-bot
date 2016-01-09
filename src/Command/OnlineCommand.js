@@ -1,4 +1,5 @@
 const AbstractCommand = require('./AbstractCommand');
+const User = require('../Model/User')
 
 class OnlineCommand extends AbstractCommand {
     static get name() { return 'online'; }
@@ -16,9 +17,7 @@ class OnlineCommand extends AbstractCommand {
             let user = this.client.users.get('id', matches[1]),
                 key  = 'discord.user.' + matches[1];
 
-            this.brain.get(key, (error, reply) => {
-                let info = reply === null ? {} : JSON.parse(reply);
-
+            User.findOne({identifier: matches[1]}, (err, info) => {
                 if (user === undefined) {
                     this.reply("I couldn't find status information on that user!");
 
@@ -43,6 +42,8 @@ class OnlineCommand extends AbstractCommand {
                     }
 
                     this.reply("The last time I saw that user available was: " + info.lastAvailable);
+
+                    return;
                 }
 
                 this.reply("That user is currently online.");
