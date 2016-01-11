@@ -36,8 +36,10 @@ class MentionsCommand extends AbstractCommand {
             this.brain.get('discord.mentions.' + this.message.author.id, (err, reply) => {
                 let mentions = reply === null ? [] : JSON.parse(reply);
 
+                mentions.reverse();
+
                 let message = `Here are your last ${count > mentions.length ? mentions.length : count} mentions:`;
-                for (let i = count.length - 1; i >= 0; i--) {
+                for (let i = 0; i < count; i++) {
                     let mention = mentions[i];
                     if (mention === undefined) {
                         continue;
