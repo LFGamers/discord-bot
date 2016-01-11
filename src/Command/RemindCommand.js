@@ -19,7 +19,6 @@ class RemindCommand extends AbstractCommand {
             this.reply(RemindCommand.help);
         });
         this.responds(/^remind(?: me)? (in|on|to) (.+?) (in|on|to) (.+?)$/m, (matches) => {
-            console.log(matches);
             try {
                 let type, date, action;
                 if (matches[1] === 'in') {

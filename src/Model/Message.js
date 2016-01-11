@@ -16,8 +16,9 @@ class Message {
 
     get content() {
         let content = this.rawContent;
-        content     = _.trim(content.replace(this.client.user.mention(), ''));
-        content     = _.trim(content.replace(this.prefix, ''));
+
+        let regex = new RegExp(`^(${this.client.user.mention()})|(\\${this.prefix})`);
+        content     = _.trim(content.replace(regex, ''));
 
         return content;
     }
