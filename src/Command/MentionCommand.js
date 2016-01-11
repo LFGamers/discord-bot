@@ -37,7 +37,7 @@ class MentionsCommand extends AbstractCommand {
                 let mentions = reply === null ? [] : JSON.parse(reply);
 
                 let message = `Here are your last ${count > mentions.length ? mentions.length : count} mentions:`;
-                for (let i = 0; i < count; i++) {
+                for (let i = count.length - 1; i >= 0; i--) {
                     let mention = mentions[i];
                     if (mention === undefined) {
                         continue;
@@ -45,7 +45,7 @@ class MentionsCommand extends AbstractCommand {
 
                     let author  = this.client.users.get('id', mention.author),
                         content = mention.content,
-                        date    = moment(mention.timestamp).format('MM/DD/YY h:mm:ssa');
+                        date    = moment.unix(mention.timestamp).format('MM/DD/YY h:mm:ssa');
 
                     message += `\n\n[${date}] ${author.mention()}: ${mention.content}`;
                 }
