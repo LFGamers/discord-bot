@@ -15,7 +15,7 @@ class RestartCommand extends AbstractCommand {
         }
 
         this.responds(/^prune$/i, () => {
-            if (this.message.isPm()) {
+            if (this.message.isPm() || this.client.admin.id !== this.message.author.id) {
                 return;
             }
 
@@ -24,7 +24,7 @@ class RestartCommand extends AbstractCommand {
         });
 
         this.responds(/^prune (\d+)$/i, (matches) => {
-            if (this.message.isPm()) {
+            if (this.message.isPm() || this.client.admin.id !== this.message.author.id) {
                 return;
             }
 
@@ -33,7 +33,7 @@ class RestartCommand extends AbstractCommand {
         });
 
         this.responds(/^prune <@(\d+)>$/i, (matches) => {
-            if (this.message.isPm()) {
+            if (this.message.isPm() || this.client.admin.id !== this.message.author.id) {
                 return;
             }
 
@@ -43,7 +43,7 @@ class RestartCommand extends AbstractCommand {
         });
 
         this.responds(/^prune (\d+) <@(\d+)>$/i, (matches) => {
-            if (this.message.isPm()) {
+            if (this.message.isPm() || this.client.admin.id !== this.message.author.id) {
                 return;
             }
 
@@ -53,7 +53,7 @@ class RestartCommand extends AbstractCommand {
         });
 
         this.responds(/^prune <@(\d+)> (\d+)$/i, (matches) => {
-            if (this.message.isPm()) {
+            if (this.message.isPm() || this.client.admin.id !== this.message.author.id) {
                 return;
             }
 
