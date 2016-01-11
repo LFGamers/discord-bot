@@ -63,6 +63,7 @@ class LfgCommand extends AbstractCommand {
                 /^set (battlenet|battle|battletag|twitch|steam|uplay|origin|xbl|psn|xbox|playstation) (.*)/i,
                 (matches) => {
                     if (!this.message.pm) {
+                        this.client.deleteMessage(this.message.message);
                         this.reply("PM me this request please.");
 
                         return;
@@ -99,6 +100,7 @@ class LfgCommand extends AbstractCommand {
                 /^unset (battlenet|battle|battletag|twitch|steam|uplay|origin|xbl|psn|xbox|playstation) (.*)/i,
                 (matches) => {
                     if (!this.message.pm) {
+                        this.client.deleteMessage(this.message.message);
                         this.reply("PM me this request please.");
 
                         return;
