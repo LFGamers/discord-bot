@@ -8,6 +8,8 @@ class ArcherCommand extends AbstractCommand {
     static get description() { return "Listens for words from archer, and replies"; }
 
     handle() {
+        return false;
+        
         ArcherCommand.phrases.forEach((phrase) => {
             return this.hears(phrase.regex, () => {
                 if (this.isThrottled(phrase.regex.toString(), THROTTLE)) {
