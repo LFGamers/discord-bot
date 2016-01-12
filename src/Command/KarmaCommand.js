@@ -71,9 +71,9 @@ If you are the server owner, you can run \`karma clear\` to clear the karma.`
                     amount = matches[2] === undefined ? 5 : matches[2];
 
                 if (matches[1] === 'top' || matches[1] === 'best') {
-                    karma.sort((a, b) => { return Number(a.karma) < Number(b.karma); });
+                    karma.sort((a, b) => { return Number(b.karma) - Number(a.karma); });
                 } else {
-                    karma.sort((a, b) => { return Number(a.karma) > Number(b.karma); });
+                    karma.sort((a, b) => { return Number(a.karma) - Number(b.karma); });
                 }
 
                 let message = `The current ${matches[1]} karma: \n\n`;
