@@ -9,7 +9,7 @@ class ArcherCommand extends AbstractCommand {
 
     handle() {
         return false;
-        
+
         ArcherCommand.phrases.forEach((phrase) => {
             return this.hears(phrase.regex, () => {
                 if (this.isThrottled(phrase.regex.toString(), THROTTLE)) {

@@ -42,6 +42,10 @@ class Bot {
         } else {
             console.error(chalk.red("Admin ID not defined. Commands requiring it disabled."));
         }
+
+        this.client.servers.forEach((server) => {
+            this.container.get('factory.event_listener').create(server).listen();
+        })
     }
 
     onDisconnect() {
