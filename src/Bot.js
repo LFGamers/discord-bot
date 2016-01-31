@@ -33,7 +33,7 @@ class Bot {
     onReady() {
         console.log(chalk.green("Bot is connected, waiting for messages"));
 
-        this.client.setStatus('online', 'https://lfgame.rs');
+        this.client.setStatus('online', 'www.lfgame.rs');
 
         this.container.get('listener.message').listen();
         this.container.get('listener.username').listen();
