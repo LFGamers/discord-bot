@@ -79,6 +79,7 @@ class DiscordEventListener {
     }
 
     onVoice(type, user, channel) {
+        return;
         if (channel.server.id !== this.server.id) {
             return;
         }
