@@ -33,8 +33,8 @@ class DiscordEventListener {
         this.client.on('userBanned', this.onUser.bind(this, 'ban'));
         this.client.on('userUnbanned', this.onUser.bind(this, 'unban'));
 
-        this.client.on('voiceJoin', this.onVoice.bind(this, 'voice_join'));
-        this.client.on('voiceLeave', this.onVoice.bind(this, 'voice_leave'));
+        //this.client.on('voiceJoin', this.onVoice.bind(this, 'voice_join'));
+        //this.client.on('voiceLeave', this.onVoice.bind(this, 'voice_leave'));
 
         // Commented out until the presence update is better
         //this.client.on('presence', this.onUserPresence.bind(this));
