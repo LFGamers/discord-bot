@@ -1,4 +1,4 @@
-const AbstractCommand = require('./AbstractCommand');
+const AbstractCommand = require('discord-bot-base').AbstractCommand;
 const chalk           = require('chalk');
 const moment          = require('moment');
 
@@ -10,6 +10,8 @@ class MentionsCommand extends AbstractCommand {
     static get description() { return "Lets users see what their most recent mentions are. "; }
 
     handle() {
+        this.brain = this.container.get('brain.redis');
+
         this.hears(/<@(\d+)>/m, () => {
             this.message.mentions.forEach((mention) => {
                 this.brain.get('discord.mentions.' + mention.id, (err, reply) => {

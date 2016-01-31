@@ -1,4 +1,4 @@
-const AbstractCommand = require('./AbstractCommand');
+const AbstractCommand = require('discord-bot-base').AbstractCommand;
 const chalk           = require('chalk');
 const _               = require('lodash');
 
@@ -38,6 +38,8 @@ If you are the server owner, you can run \`karma clear\` to clear the karma.`
     }
 
     handle() {
+        this.brain = this.container.get('brain.redis');
+
         this.responds(/^karma$/, () => {
             this.reply(KarmaCommand.help);
         });
@@ -67,9 +69,10 @@ If you are the server owner, you can run \`karma clear\` to clear the karma.`
             }
 
             this.brain.get('discord.karma.'+this.message.server.id, (err, reply) => {
-                let karma = reply === null ? {} : JSON.parse(reply),
+                let karma = reply === null ? [] : JSON.parse(reply),
                     amount = matches[2] === undefined ? 5 : matches[2];
 
+                console.log(karma);
                 if (matches[1] === 'top' || matches[1] === 'best') {
                     karma.sort((a, b) => { return Number(b.karma) - Number(a.karma); });
                 } else {

@@ -1,6 +1,4 @@
-'use strict';
-
-const AbstractCommand = require('./AbstractCommand');
+const AbstractCommand = require('discord-bot-base').AbstractCommand;
 const chalk           = require('chalk');
 const _               = require('lodash');
 

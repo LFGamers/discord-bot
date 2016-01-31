@@ -2,5 +2,5 @@
 
 while :
 do
-    node --harmony index.js
+    node --harmony src/index.js
 done

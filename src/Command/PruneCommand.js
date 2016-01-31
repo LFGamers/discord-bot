@@ -1,4 +1,4 @@
-const AbstractCommand = require('./AbstractCommand');
+const AbstractCommand = require('discord-bot-base').AbstractCommand;
 const chalk           = require('chalk');
 
 const MAX_ATTEMPTS = 5;

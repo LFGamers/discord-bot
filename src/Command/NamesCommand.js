@@ -1,4 +1,4 @@
-const AbstractCommand = require('./AbstractCommand');
+const AbstractCommand = require('discord-bot-base').AbstractCommand;
 const User            = require('../Model/User');
 
 class NamesCommand extends AbstractCommand {

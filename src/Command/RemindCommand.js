@@ -1,4 +1,4 @@
-const AbstractCommand = require('./AbstractCommand');
+const AbstractCommand = require('discord-bot-base').AbstractCommand;
 const chalk           = require('chalk');
 const _               = require('lodash');
 const moment          = require('moment');
@@ -15,6 +15,8 @@ class RemindCommand extends AbstractCommand {
     }
 
     handle() {
+        this.dispatcher = this.container.get('dispatcher');
+
         this.responds(/^remind( me)?$/, () => {
             this.reply(RemindCommand.help);
         });
