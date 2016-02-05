@@ -6,12 +6,13 @@ const Bot                  = require('./Bot');
 const UserListener         = require('./Listener/UserListener');
 const EventListenerFactory = require('./Factory/EventListenerFactory');
 const ReminderManager      = require('./Manager/ReminderManager');
+const env                  = process.env;
 
 let walker  = walk.walk(__dirname + '/Command/', {followLinks: false}),
     options = {
-        admin_id:  process.env.DISCORD_ADMIN_ID,
-        email:     process.env.DISCORD_EMAIL,
-        password:  process.env.DISCORD_PASSWORD,
+        admin_id:  env.DISCORD_ADMIN_ID,
+        email:     env.DISCORD_EMAIL,
+        password:  env.DISCORD_PASSWORD,
         name:      pkg.name,
         log_dir:   '/var/log/discord_bots',
         version:   pkg.version,
@@ -22,8 +23,8 @@ let walker  = walk.walk(__dirname + '/Command/', {followLinks: false}),
         container: (Bot) => {
             return {
                 parameters: {
-                    "redis_url":         process.env.DISCORD_REDIS_URL,
-                    "mongo_url":         process.env.DISCORD_MONGO_URL,
+                    "redis_url":         env.DISCORD_REDIS_URL,
+                    "mongo_url":         env.DISCORD_MONGO_URL,
                     eventLogChannelName: 'event-log'
                 },
                 services:   {
