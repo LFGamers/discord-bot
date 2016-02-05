@@ -1,10 +1,6 @@
 const BaseBot          = require('discord-bot-base').Bot;
 
 class Bot extends BaseBot {
-    constructor(env, debug, options) {
-        super(env, debug, options);
-    }
-
     onReady() {
         super.onReady();
 
