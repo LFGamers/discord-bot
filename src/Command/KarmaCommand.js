@@ -69,16 +69,17 @@ If you are the server owner, you can run \`karma clear\` to clear the karma.`
             }
 
             this.brain.get('discord.karma.' + this.message.server.id, (err, reply) => {
-                let karma  = reply === null ? [] : JSON.parse(reply);
+                let karma  = reply === null ? [] : JSON.parse(reply),
+                    newKarma = [];
 
-                karma.forEach((info, index) => {
+                karma.forEach((info) => {
                     let user = this.client.users.get('id', info.user_id);
-                    if (user === null || user === undefined) {
-                        karma.splice(index, -1);
+                    if (user !== null && user !== undefined) {
+                        newKarma.push(info);
                     }
                 });
 
-                this.brain.set('discord.karma.' + this.message.server.id, JSON.stringify(karma));
+                this.brain.set('discord.karma.' + this.message.server.id, JSON.stringify(newKarma));
                 this.sendMessage(this.message.channel, "Karma has been cleaned up");
             });
         });
