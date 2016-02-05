@@ -47,5 +47,9 @@ walker.on('file', (root, stat, next) => {
 });
 
 walker.on('end', () => {
-    new Bot('dev', true, options);
+    let environment = 'prod';
+    if (env.DISCORD_ENV !== undefined) {
+        environment = env.DISCORD_ENV;
+    }
+    new Bot(environment, environment === 'dev', options);
 });
