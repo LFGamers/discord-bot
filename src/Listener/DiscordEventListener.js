@@ -53,11 +53,11 @@ class DiscordEventListener {
         }
 
         if (type !== 'updated') {
-            return this.logEvent(`Channel ${type}: \`${channel.name}\``);
+            return this.logEvent(`Channel ${type}: **${channel.name}**`);
         }
 
         if (channel.name !== updatedChannel.name) {
-            this.logEvent(`Channel name changed: \`${channel.name}\` -> \`${updatedChannel.name}\``);
+            this.logEvent(`Channel name changed: **${channel.name}** -> **${updatedChannel.name}**`);
         }
     }
 
@@ -66,7 +66,7 @@ class DiscordEventListener {
             return;
         }
 
-        this.logEvent(`${user.username} has ${type === 'new' ? 'joined' : 'left'} the server.`);
+        this.logEvent(`**${user.username}** has ${type === 'new' ? 'joined' : 'left'} the server.`);
     }
 
     onUser(type, user, server) {
@@ -74,7 +74,7 @@ class DiscordEventListener {
             return;
         }
 
-        this.logEvent(`${user.username} has been ${type}ned`);
+        this.logEvent(`**${user.username}** has been ${type}ned`);
     }
 
     onVoice(type, channel, user) {
@@ -83,7 +83,7 @@ class DiscordEventListener {
         }
 
         this.logEvent(
-            `${user.username} has ${type === 'voice_join' ? 'joined' : 'left'} the voice channel:  ${channel.name}.`
+            `**${user.username}** has ${type === 'voice_join' ? 'joined' : 'left'} the voice channel:  **${channel.name}**.`
         );
     }
 
@@ -103,15 +103,15 @@ class DiscordEventListener {
 
             let type = newUser.status === 'online' ? 'come online' : 'gone offline';
 
-            return this.logEvent(`${user.username} has ${type}.`)
+            return this.logEvent(`**${user.username}** has ${type}.`)
         }
 
         if (old.username !== newUser.username) {
-            return this.logEvent(`${old.username} has changed their name to ${newUser.username}`);
+            return this.logEvent(`**${old.username}** has changed their name to **${newUser.username}**`);
         }
 
         if (old.avatar !== newUser.avatar) {
-            return this.logEvent(`${newUser.username} has changed their avatar`);
+            return this.logEvent(`**${newUser.username}** has changed their avatar`);
         }
     }
 }
