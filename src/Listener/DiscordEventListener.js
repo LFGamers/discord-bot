@@ -96,6 +96,10 @@ class DiscordEventListener {
      * @param newUser
      */
     onUserPresence(old, newUser) {
+        if (!this.server.users.find(user => user.id === newUser.id)) {
+            return false;
+        }
+
         if (old.status !== newUser.status) {
             console.log(newUser.status);
             if (newUser.status === 'idle' || old.status === 'idle') {
