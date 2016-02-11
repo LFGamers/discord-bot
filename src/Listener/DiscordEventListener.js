@@ -96,10 +96,6 @@ class DiscordEventListener {
      * @param newUser
      */
     onUserPresence(old, newUser) {
-        if (server.id !== this.server.id) {
-            return;
-        }
-
         if (old.status !== newUser.status) {
             if (newUser.status === 'idle' || old.status === 'idle') {
                 return;
