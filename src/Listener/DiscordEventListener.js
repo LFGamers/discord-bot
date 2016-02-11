@@ -33,11 +33,10 @@ class DiscordEventListener {
         this.client.on('userBanned', this.onUser.bind(this, 'ban'));
         this.client.on('userUnbanned', this.onUser.bind(this, 'unban'));
 
-        //this.client.on('voiceJoin', this.onVoice.bind(this, 'voice_join'));
-        //this.client.on('voiceLeave', this.onVoice.bind(this, 'voice_leave'));
+        this.client.on('voiceJoin', this.onVoice.bind(this, 'voice_join'));
+        this.client.on('voiceLeave', this.onVoice.bind(this, 'voice_leave'));
 
-        // Commented out until the presence update is better
-        //this.client.on('presence', this.onUserPresence.bind(this));
+        this.client.on('presence', this.onUserPresence.bind(this));
     }
 
     logEvent(message) {
@@ -78,8 +77,7 @@ class DiscordEventListener {
         this.logEvent(`${user.username} has been ${type}ned`);
     }
 
-    onVoice(type, user, channel) {
-        return;
+    onVoice(type, channel, user) {
         if (channel.server.id !== this.server.id) {
             return;
         }
@@ -89,11 +87,36 @@ class DiscordEventListener {
         );
     }
 
-    onUserPresence(user, status, game) {
+    /**
+     * @todo
+     *      Add the users game to the list of games they play
+     *      log on avatar change
+     *
+     * @param old
+     * @param newUser
+     */
+    onUserPresence(old, newUser) {
         if (server.id !== this.server.id) {
             return;
         }
 
+        if (old.status !== newUser.status) {
+            if (newUser.status === 'idle' || old.status === 'idle') {
+                return;
+            }
+
+            let type = newUser.status === 'online' ? 'come online' : 'gone offline';
+
+            return this.logEvent(`${user.username} has ${type}.`)
+        }
+
+        if (old.username !== newUser.username) {
+            return this.logEvent(`${old.username} has changed their name to ${newUser.username}`);
+        }
+
+        if (old.avatar !== newUser.avatar) {
+            return this.logEvent(`${newUser.username} has changed their avatar`);
+        }
     }
 }
 
