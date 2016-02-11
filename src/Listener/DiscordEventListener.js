@@ -97,13 +97,14 @@ class DiscordEventListener {
      */
     onUserPresence(old, newUser) {
         if (old.status !== newUser.status) {
+            console.log(newUser.status);
             if (newUser.status === 'idle' || old.status === 'idle') {
                 return;
             }
 
             let type = newUser.status === 'online' ? 'come online' : 'gone offline';
 
-            return this.logEvent(`**${user.username}** has ${type}.`)
+            return this.logEvent(`**${newUser.username}** has ${type}.`)
         }
 
         if (old.username !== newUser.username) {
