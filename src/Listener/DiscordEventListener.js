@@ -96,7 +96,7 @@ class DiscordEventListener {
      * @param newUser
      */
     onUserPresence(old, newUser) {
-        if (!this.server.users.find(user => user.id === newUser.id)) {
+        if (!this.server.members.find(user => user.id === newUser.id)) {
             return false;
         }
 
