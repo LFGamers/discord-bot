@@ -28,7 +28,7 @@ class ColorCommand extends AbstractCommand {
                 }
 
                 this.reply(
-                    `Updating ${role.name} role to ${color}. ${typeof color}`,
+                    `Updating ${role.name} role to #${matches[2]}.`,
                     0,
                     3000
                 );
