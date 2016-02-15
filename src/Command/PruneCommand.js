@@ -64,7 +64,6 @@ class RestartCommand extends AbstractCommand {
     }
 
     deleteMessages(count, user, deleted, attempt) {
-        console.log(`Deleting ${count} messages. User: ${user}`);
         let start = 0;
         if (deleted === undefined) {
             deleted = 0;

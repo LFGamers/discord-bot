@@ -88,9 +88,7 @@ class DiscordEventListener {
     }
 
     /**
-     * @todo
-     *      Add the users game to the list of games they play
-     *      log on avatar change
+     * @todo Add the users game to the list of games they play
      *
      * @param old
      * @param newUser
