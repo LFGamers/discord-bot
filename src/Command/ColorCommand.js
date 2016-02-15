@@ -10,6 +10,10 @@ class ColorCommand extends AbstractCommand {
     }
 
     handle() {
+        if (this.message.server.owner.id !== this.message.author.id) {
+            return false;
+        }
+
         this.responds(/^color (.+) #([A-Fa-f0-9]{6})$/m, (matches) => {
             let roleName = matches[1],
                 color    = parseInt(matches[2], 16),
