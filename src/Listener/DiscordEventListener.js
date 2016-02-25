@@ -99,7 +99,6 @@ class DiscordEventListener {
         }
 
         if (old.status !== newUser.status) {
-            console.log(newUser.status);
             if (newUser.status === 'idle' || old.status === 'idle') {
                 return;
             }
