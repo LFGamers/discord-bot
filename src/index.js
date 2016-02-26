@@ -1,11 +1,11 @@
 'use strict';
 
+const env = process.env;
 const pkg                  = require('../package');
 const Bot                  = require('./Bot');
 const UserListener         = require('./Listener/UserListener');
 const EventListenerFactory = require('./Factory/EventListenerFactory');
 const ReminderManager      = require('./Manager/ReminderManager');
-const env                  = process.env;
 const Commands             = require('require-all')(__dirname + '/Command/');
 
 let commands = [];

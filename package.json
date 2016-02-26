@@ -2,10 +2,7 @@
   "name": "discord-bot",
   "version": "0.1.0",
   "description": "Javascript bot for Discord",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "main": "src/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/LFGamers/discord-bot.git"
@@ -17,15 +14,6 @@
   },
   "homepage": "https://github.com/LFGamers/discord-bot#readme",
   "dependencies": {
-    "bluebird": "^3.1",
-    "chalk": "^1.1",
-    "discord-bot-base": "^3.4",
-    "discord.js": "hydrabolt/discord.js#indev",
-    "lodash": "^4.0",
-    "moment": "^2.10",
-    "moment-timezone": "^0.5",
-    "juration": "^0.0",
-    "mongoose": "^4.3",
-    "redis": "^2.4"
+    "discord-bot-base": "^3.4"
   }
 }
