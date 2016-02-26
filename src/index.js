@@ -18,7 +18,7 @@ let walker  = walk.walk(__dirname + '/Command/', {followLinks: false}),
         version:   pkg.version,
         author:    pkg.author,
         commands:  [],
-        status:    'www.lfgame.rs',
+        status:    'https://lfgame.rs',
         prefix:    "$",
         container: (Bot) => {
             return {
