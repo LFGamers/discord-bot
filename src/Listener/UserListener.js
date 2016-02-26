@@ -29,7 +29,7 @@ class UserListener {
             }
 
             user.names.push(changed.username);
-            user.names = _.unique(user.names);
+            user.names = _.uniq(user.names);
 
             user.save();
         });
