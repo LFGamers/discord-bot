@@ -14,14 +14,14 @@ class ColorCommand extends AbstractCommand {
             return false;
         }
 
-        this.responds(/^color (.+)$/m, (matches) => {
+        this.responds(/^color ([\w\s]+)$/m, (matches) => {
             let roleName = matches[1],
                 role     = this.message.server.roles.get('name', roleName);
 
             this.reply(`${role.name} has a color of: ${role.colorAsHex()}`);
         });
 
-        this.responds(/^color (.+) #([A-Fa-f0-9]{6})$/m, (matches) => {
+        this.responds(/^color ([\w\s]+) #([A-Fa-f0-9]{6})$/m, (matches) => {
             let roleName = matches[1],
                 color    = parseInt(matches[2], 16),
                 role     = this.message.server.roles.get('name', roleName);
