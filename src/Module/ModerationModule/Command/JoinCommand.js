@@ -20,8 +20,12 @@ class JoinCommand extends AbstractCommand {
                         return this.reply("Couldn't join that server.");
                     }
 
+                    let prefix = this.container.getParameter('prefix');
                     this.reply("Server joined.");
-                    this.client.sendMessage(server, `I was invited by ${this.message.author.mention()}. Type \`$help\` to see what i do`);
+                    this.sendMessage(
+                        server,
+                        `I was invited by ${this.author.mention()}. Type \`${prefix}help\` to see what i do`
+                    );
                 });
             }
         );

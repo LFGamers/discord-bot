@@ -1,24 +1,27 @@
 const AbstractCommand = require('discord-bot-base').AbstractCommand;
-const chalk           = require('chalk');
-const _               = require('lodash');
-
-const User = require('../Model/User');
+const User            = require('../../../Model/User');
 
 class LfgCommand extends AbstractCommand {
-    static get name() { return 'lfg'; }
+    static get name() {
+        return 'lfg';
+    }
 
-    static get description() { return "Lets you find out gamer information for a user"; }
+    static get description() {
+        return "Lets you find out gamer information for a user";
+    }
 
-    static get help() { return `Type \`lfg <user>\` to get gamer information about \`user\`. To set your information, pm me with lfg help`; }
+    static get help() {
+        return `Type \`lfg <user>\` to get gamer information about \`user\`. To set your information, pm me with lfg help`;
+    }
 
     handle() {
         this.responds(/^lfg$/, () => {
             this.reply(LfgCommand.help);
         });
 
-        this.responds(/^lfg <@(\d+)>$/, (matches) => {
-            this.getUser(this.message.mentions[0], (user) => {
-                let message = `User information about: ${this.message.mentions[0].mention()}\n`;
+        this.responds(/^lfg <@(\d+)>$/, () => {
+            this.getUser(this.mentions[0], (user) => {
+                let message = `User information about: ${this.mentions[0].mention()}\n`;
 
                 if (user.platforms.length > 0) {
                     message += `\nNetwork Names:`;
@@ -29,19 +32,13 @@ class LfgCommand extends AbstractCommand {
                     });
                 }
 
-                if (this.message.pm) {
-                    this.reply(message);
-                } else {
-                    this.sendMessage(this.message.channel, message);
-                }
+                this.reply(message);
             })
         });
 
         this.responds(/^lfg help(?: set)?/, () => {
-            if (!this.message.pm) {
-                this.reply("PM me this request please.");
-
-                return;
+            if (!this.isPm()) {
+                return this.reply("PM me this request please.");
             }
 
             this.reply(
@@ -55,16 +52,15 @@ class LfgCommand extends AbstractCommand {
         });
 
         this.responds(/^(lfg )(.+)$/gmi, (matches) => {
-            this.message.message.content = this.message.rawContent.replace(matches[1], '');
+            this.message.content = this.rawContent.replace(matches[1], '');
 
             this.responds(
                 /^set (battlenet|battle|battletag|twitch|steam|uplay|origin|xbl|psn|xbox|playstation) (.*)/i,
                 (matches) => {
-                    if (!this.message.pm) {
-                        this.client.deleteMessage(this.message.message);
-                        this.reply("PM me this request please.");
+                    if (!this.isPm()) {
+                        this.client.deleteMessage(this.message);
 
-                        return;
+                        return this.reply("PM me this request please.");
                     }
 
                     let platform = matches[1],
@@ -84,7 +80,7 @@ class LfgCommand extends AbstractCommand {
 
                     console.log("Setting " + platform + ' to `' + name + '`.');
 
-                    this.getUser(this.message.author, (user) => {
+                    this.getUser(this.author, (user) => {
                         user.platforms.push({platform: platform, name: name});
                         user.save((err, user) => {
                             console.log(err, user);
@@ -97,11 +93,10 @@ class LfgCommand extends AbstractCommand {
             this.responds(
                 /^unset (battlenet|battle|battletag|twitch|steam|uplay|origin|xbl|psn|xbox|playstation) (.*)/i,
                 (matches) => {
-                    if (!this.message.pm) {
-                        this.client.deleteMessage(this.message.message);
-                        this.reply("PM me this request please.");
+                    if (!this.isPm()) {
+                        this.client.deleteMessage(this.message);
 
-                        return;
+                        return this.reply("PM me this request please.");
                     }
 
                     let platform = matches[1],
@@ -121,13 +116,19 @@ class LfgCommand extends AbstractCommand {
 
                     console.log("Unsetting " + platform + ' to `' + name + '`.');
 
-                    this.getUser(this.message.author, (user) => {
+                    this.getUser(this.author, (user) => {
                         user.platforms.forEach((p, index) => {
                             if (p.platform == platform && p.name == name) {
                                 user.platforms.splice(index, 1);
                             }
                         });
-                        user.save((err, user) => {
+                        user.save(err => {
+                            if (err) {
+                                this.logger.error(err);
+
+                                return this.reply("Failed saving your information");
+                            }
+
                             this.reply("I've saved your information.");
                         });
                     });

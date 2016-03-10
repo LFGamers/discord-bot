@@ -1,22 +1,11 @@
 'use strict';
 
-const env = process.env;
+const env                  = process.env;
 const pkg                  = require('../package');
 const Bot                  = require('./Bot');
 const UserListener         = require('./Listener/UserListener');
 const EventListenerFactory = require('./Factory/EventListenerFactory');
 const ReminderManager      = require('./Manager/ReminderManager');
-const Commands             = require('require-all')(__dirname + '/Command/');
-
-let commands = [];
-for (let name in Commands) {
-    if (Commands.hasOwnProperty(name)) {
-        if (name !== 'AbstractCommand') {
-            commands.push(Commands[name]);
-        }
-    }
-}
-
 let options = {
     admin_id:  env.DISCORD_ADMIN_ID,
     email:     env.DISCORD_EMAIL,
@@ -26,7 +15,11 @@ let options = {
     name:      pkg.name,
     version:   pkg.version,
     author:    pkg.author,
-    commands:  commands,
+    modules:   [
+        require('./Module/FunModule/FunModule'),
+        require('./Module/LFGamersModule/LFGamersModule'),
+        require('./Module/ModerationModule/ModerationModule')
+    ],
     status:    'https://lfgame.rs',
     prefix:    "$",
     container: (Bot) => {
@@ -35,14 +28,9 @@ let options = {
                 eventLogChannelName: 'event-log'
             },
             services:   {
-                'factory.event_listener': {
-                    module: EventListenerFactory,
-                    args:   [{$ref: 'client'}, '%eventLogChannelName%']
-                },
-                'reminder.message':       {
-                    module: ReminderManager, args: [{$ref: 'dispatcher'}, {$ref: 'client'}, {$ref: 'brain.redis'}]
-                },
-                'listener.username':      {module: UserListener, args: [{$ref: 'client'}]}
+                'factory.event_listener': {module: EventListenerFactory, args: ['@client', '%eventLogChannelName%']},
+                'reminder.message':       {module: ReminderManager, args: ['@dispatcher', '@client', '@brain.redis']},
+                'listener.username':      {module: UserListener, args: ['@client']}
             }
         }
     }

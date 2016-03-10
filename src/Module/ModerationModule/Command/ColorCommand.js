@@ -10,32 +10,37 @@ class ColorCommand extends AbstractCommand {
     }
 
     handle() {
-        if (this.message.server.owner.id !== this.message.author.id) {
+        if (!this.isOwner() && !this.isAdmin()) {
             return false;
         }
 
         this.responds(/^color ([\w\s]+)$/m, (matches) => {
-            let roleName = matches[1],
-                role     = this.message.server.roles.get('name', roleName);
+            let role = this.server.roles.get('name', matches[1]);
+
+            if (!role) {
+                return this.reply('Role not found.', 0, 3000);
+            }
 
             this.reply(`${role.name} has a color of: ${role.colorAsHex()}`);
         });
 
         this.responds(/^color ([\w\s]+) #([A-Fa-f0-9]{6})$/m, (matches) => {
-            let roleName = matches[1],
-                color    = parseInt(matches[2], 16),
-                role     = this.message.server.roles.get('name', roleName);
+            let role = this.server.roles.get('name', matches[1]);
 
-            this.client.deleteMessage(this.message.message);
-            this.client.updateRole(role, {color: color}, (error, role) => {
+            if (!role) {
+                return this.reply('Role not found.', 0, 3000);
+            }
+
+            this.client.deleteMessage(this.message);
+            this.client.updateRole(role, {color: parseInt(matches[2], 16)}, (error, role) => {
                 if (error) {
-                    console.log(error);
+                    this.reply("Failed to update role color.");
 
-                    return;
+                    return this.logger.log(error);
                 }
 
                 this.reply(
-                    `Updating ${role.name} role to #${matches[2]}.`,
+                    `Updating ${role.name} role to #${role.colorAsHex()}.`,
                     0,
                     3000
                 );

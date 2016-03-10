@@ -1,23 +1,26 @@
-const AbstractCommand = require('discord-bot-base').AbstractCommand;
-const chalk           = require('chalk');
-const moment          = require('moment');
+const AbstractCommand = require('discord-bot-base').AbstractCommand,
+      moment          = require('moment');
 
 const MAX_MENTIONS = 200;
 
 class MentionsCommand extends AbstractCommand {
-    static get name() { return 'mentions'; }
+    static get name() {
+        return 'mentions';
+    }
 
-    static get description() { return "Lets users see what their most recent mentions are. "; }
+    static get description() {
+        return "Lets users see what their most recent mentions are. ";
+    }
 
     handle() {
         this.brain = this.container.get('brain.redis');
 
         this.hears(/<@(\d+)>/m, () => {
-            this.message.mentions.forEach((mention) => {
+            this.mentions.forEach((mention) => {
                 this.brain.get('discord.mentions.' + mention.id, (err, reply) => {
                     let mentions      = reply === null ? [] : JSON.parse(reply);
-                    mention.author    = this.message.author.id;
-                    mention.content   = this.message.rawContent;
+                    mention.author    = this.author.id;
+                    mention.content   = this.rawContent;
                     mention.timestamp = moment().unix();
                     mentions.push(mention);
                     if (mentions.length > MAX_MENTIONS) {
@@ -26,7 +29,9 @@ class MentionsCommand extends AbstractCommand {
 
                     this.brain.set('discord.mentions.' + mention.id, JSON.stringify(mentions));
                 });
-            })
+            });
+
+            return false;
         });
 
         this.responds(/^mentions ?(\d+)?$/m, (matches) => {
@@ -35,7 +40,7 @@ class MentionsCommand extends AbstractCommand {
                 count = MAX_MENTIONS;
             }
 
-            this.brain.get('discord.mentions.' + this.message.author.id, (err, reply) => {
+            this.brain.get('discord.mentions.' + this.author.id, (err, reply) => {
                 let mentions = reply === null ? [] : JSON.parse(reply);
 
                 mentions.reverse();
@@ -54,9 +59,9 @@ class MentionsCommand extends AbstractCommand {
                     message += `\n\n[${date}] ${author.mention()}: ${mention.content}`;
                 }
 
-                this.sendMessage(this.message.author, message);
+                this.sendMessage(this.author, message);
 
-                if (!this.message.isPm) {
+                if (!this.isPm()) {
                     this.reply("I've PMed you your recent mentions.");
                 }
             });

@@ -1,6 +1,5 @@
-const AbstractCommand = require('discord-bot-base').AbstractCommand;
-const chalk           = require('chalk');
-const _               = require('lodash');
+const AbstractCommand = require('discord-bot-base').AbstractCommand,
+      _               = require('lodash');
 
 const PLUS_MESSAGES = [
     'has pleased the gods!',
@@ -25,9 +24,13 @@ const NEGATIVE_MESSAGE = [
 ];
 
 class KarmaCommand extends AbstractCommand {
-    static get name() { return 'karma'; }
+    static get name() {
+        return 'karma';
+    }
 
-    static get description() { return "Manages Karma"; }
+    static get description() {
+        return "Manages Karma";
+    }
 
     static get help() {
         return `Mention a user, and place \`++\` or \`--\` after, to give or remove karma from a user.
@@ -44,32 +47,26 @@ If you are the server owner, you can run \`karma clear\` to clear the karma.`
             this.reply(KarmaCommand.help);
         });
 
-        if (this.client.admin !== undefined) {
-            this.responds(/^karma clear$/, () => {
-                if (this.message.pm) {
-                    this.reply('This has to be ran in a server');
-
-                    return;
-                }
-
-                if (this.message.server.owner.id !== this.message.author.id) {
-                    return false;
-                }
-
-                this.brain.set('discord.karma.' + this.message.server.id, JSON.stringify([]));
-                this.reply('Karma has been cleared');
-            });
-        }
-
-        this.responds(/^karma clean$/, () => {
-            if (this.message.pm) {
-                this.reply('This has to be ran in a server');
-
-                return;
+        this.responds(/^karma clear$/, () => {
+            if (this.isPm()) {
+                return this.reply('This has to be ran in a server');
             }
 
-            this.brain.get('discord.karma.' + this.message.server.id, (err, reply) => {
-                let karma  = reply === null ? [] : JSON.parse(reply),
+            if (!this.isOwner()) {
+                return false;
+            }
+
+            this.brain.set('discord.karma.' + this.server.id, JSON.stringify([]));
+            this.reply('Karma has been cleared');
+        });
+
+        this.responds(/^karma clean$/, () => {
+            if (this.isPm()) {
+                return this.reply('This has to be ran in a server');
+            }
+
+            this.brain.get('discord.karma.' + this.server.id, (err, reply) => {
+                let karma    = reply === null ? [] : JSON.parse(reply),
                     newKarma = [];
 
                 karma.forEach((info) => {
@@ -79,27 +76,28 @@ If you are the server owner, you can run \`karma clear\` to clear the karma.`
                     }
                 });
 
-                this.brain.set('discord.karma.' + this.message.server.id, JSON.stringify(newKarma));
-                this.sendMessage(this.message.channel, "Karma has been cleaned up");
+                this.brain.set('discord.karma.' + this.server.id, JSON.stringify(newKarma));
+                this.reply("Karma has been cleaned up");
             });
         });
 
         this.responds(/^karma (top|best|bottom|worst)[\s]?(\d+)?$/, (matches) => {
-            if (this.message.pm) {
-                this.reply('This has to be ran in a server');
-
-                return;
+            if (this.isPm()) {
+                return this.reply('This has to be ran in a server');
             }
 
-            this.brain.get('discord.karma.'+this.message.server.id, (err, reply) => {
-                let karma = reply === null ? [] : JSON.parse(reply),
+            this.brain.get('discord.karma.' + this.server.id, (err, reply) => {
+                let karma  = reply === null ? [] : JSON.parse(reply),
                     amount = matches[2] === undefined ? 5 : matches[2];
 
-                console.log(karma);
                 if (matches[1] === 'top' || matches[1] === 'best') {
-                    karma.sort((a, b) => { return Number(b.karma) - Number(a.karma); });
+                    karma.sort((a, b) => {
+                        return Number(b.karma) - Number(a.karma);
+                    });
                 } else {
-                    karma.sort((a, b) => { return Number(a.karma) - Number(b.karma); });
+                    karma.sort((a, b) => {
+                        return Number(a.karma) - Number(b.karma);
+                    });
                 }
 
                 let message = `The current ${matches[1]} karma: \n\n`;
@@ -111,50 +109,46 @@ If you are the server owner, you can run \`karma clear\` to clear the karma.`
                     let info = karma[i],
                         user = this.client.users.get('id', info.user_id);
 
-                    message += `${i+1}) ${user.mention()} - ${info.karma}\n`;
+                    message += `${i + 1}) ${user.mention()} - ${info.karma}\n`;
                 }
 
-                this.sendMessage(this.message.channel, message);
+                this.reply(message);
             });
         });
 
         this.hears(/^<@(\d+)>[\s+]?(\+\+|\-\-)$/g, (matches) => {
-            if (this.message.pm) {
-                this.reply('This has to be ran in a server');
-
-                return;
+            if (this.isPm()) {
+                return this.reply('This has to be ran in a server');
             }
 
-            let throttleKey = this.message.author.id + ":" + this.message.mentions[0].id;
-            if (this.isThrottled('karma:'+throttleKey, 5)) {
+            let throttleKey = this.author.id + ":" + this.mentions[0].id;
+            if (this.isThrottled('karma:' + throttleKey, 5)) {
                 return false;
             }
 
             let selfKarma = false;
-            if (this.message.author.id === this.message.mentions[0].id) {
+            if (this.author.id === this.mentions[0].id && matches[2] === '++') {
                 this.reply("You can't karma yourself. You get negative karma.");
                 matches[2] = '--';
-                selfKarma = true;
+                selfKarma  = true;
             }
 
             let message = _.sample(matches[2] === '++' ? PLUS_MESSAGES : NEGATIVE_MESSAGE);
 
-            this.brain.get('discord.karma.'+this.message.server.id, (err, reply) => {
-                let karma = reply === null ? [] : JSON.parse(reply);
-
-                let index = this.findKarma(karma, this.message.mentions[0].id);
+            this.brain.get('discord.karma.' + this.server.id, (err, reply) => {
+                let karma = reply === null ? [] : JSON.parse(reply),
+                    index = this.findKarma(karma, this.mentions[0].id);
 
                 if (index === -1) {
-                    karma.push({user_id: this.message.mentions[0].id, karma: 0});
+                    karma.push({user_id: this.mentions[0].id, karma: 0});
                     index = karma.length - 1;
                 }
 
                 karma[index].karma += matches[2] === '++' ? 1 : -1;
 
-                this.brain.set('discord.karma.'+this.message.server.id, JSON.stringify(karma));
-                this.sendMessage(
-                    this.message.channel,
-                    this.message.mentions[0].mention() + ' ' + message + " (Karma: " + karma[index].karma + ")",
+                this.brain.set('discord.karma.' + this.server.id, JSON.stringify(karma));
+                this.reply(
+                    this.mentions[0].mention() + ' ' + message + " (Karma: " + karma[index].karma + ")",
                     selfKarma ? 500 : 0
                 );
             });
