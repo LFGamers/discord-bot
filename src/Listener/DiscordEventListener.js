@@ -8,13 +8,7 @@ class DiscordEventListener {
     listen() {
         this.channel = this.server.channels.get('name', this.channelName);
         if (this.channel === null || this.channel === undefined) {
-            return this.client.createChannel(this.server, this.channelName, 'text', (error, channel) => {
-                if (error) {
-                    return console.log(`Could not create channel in ${this.server.name}: ${this.channelName}`);
-                }
-
-                this.addListeners();
-            });
+            return false;
         }
 
         this.addListeners();
