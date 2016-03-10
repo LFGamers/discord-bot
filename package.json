@@ -14,6 +14,6 @@
   },
   "homepage": "https://github.com/LFGamers/discord-bot#readme",
   "dependencies": {
-    "discord-bot-base": "^4.0"
+    "discord-bot-base": "^4.0.5"
   }
 }
