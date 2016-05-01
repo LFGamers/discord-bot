@@ -8,8 +8,7 @@ const EventListenerFactory = require('./Factory/EventListenerFactory');
 const ReminderManager      = require('./Manager/ReminderManager');
 let options = {
     admin_id:  env.DISCORD_ADMIN_ID,
-    email:     env.DISCORD_EMAIL,
-    password:  env.DISCORD_PASSWORD,
+    token:     env.DISCORD_TOKEN,
     redis_url: env.DISCORD_REDIS_URL,
     mongo_url: env.DISCORD_MONGO_URL,
     name:      pkg.name,
